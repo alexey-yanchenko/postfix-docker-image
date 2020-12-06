@@ -11,8 +11,8 @@ RUN apt-get update \
     && update-ca-certificates \
     # Install Postfix dependencies
     && apt-get install -y --no-install-recommends --no-install-suggests \
-                libpcre3 libicu67 \
-                libdb5.3 libpq5 libmariadb19 libsqlite3-0 \
+                libpcre3 libicu63 \
+                libdb5.3 libpq5 libmariadb3 libsqlite3-0 \
                 libsasl2-2 \
                 libldap-2.4 \
     # Install tools for building
