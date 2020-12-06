@@ -22,7 +22,7 @@ RUN apt-get update \
     && buildDeps=" \
             libssl-dev \
             libpcre3-dev libicu-dev \
-            libdb-dev libpq-dev libmariadbclient-dev libsqlite3-dev libmysqlclient-dev \
+            libdb-dev libpq-dev libmariadbclient-dev libmariadb-dev-compat libsqlite3-dev libmysqlclient-dev \
             libsasl2-dev \
             libldap2-dev " \
     && apt-get install -y --no-install-recommends --no-install-suggests $buildDeps \
