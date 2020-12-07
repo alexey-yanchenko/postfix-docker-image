@@ -87,6 +87,13 @@ RUN apt-get update \
     # Prepare directories for drop-in configuration files
     && install -d /etc/postfix/main.cf.d \
     && install -d /etc/postfix/master.cf.d \
+    # Generate default TLS credentials
+    && install -d /etc/ssl/postfix \
+    && openssl req -new -x509 -nodes -days 365 \
+                    -subj "/CN=web-fuse.nl" \
+                    -out /etc/ssl/postfix/public.key \
+                    -keyout /etc/ssl/postfix/private.key \
+    && chmod 0600 /etc/ssl/postfix/server.key \
     # Pregenerate Diffie-Hellman parameters (heavy operation)
     && openssl dhparam -out /etc/postfix/dh2048.pem 2048 \
     # Cleanup unnecessary stuff
@@ -122,11 +129,8 @@ WORKDIR /etc/postfix
 
 STOPSIGNAL SIGTERM
 
-# here should the live certificates from certbot be mounted to
-VOLUME /certs/live/site
-
-# here should the archive folder be mounted
-VOLUME /certs/archive
+# should contain private.key and public.key RSA keys in PEM format
+VOLUME /etc/ssl/dkim
 
 #ENTRYPOINT ["/init"]
 
