@@ -10,4 +10,5 @@ mynetworks = 127.0.0.0/8, 17.0.0.0/8
 mydestination =
 
 # postconf authorized_submit_users
+# https://serverfault.com/questions/28445/how-do-i-send-email-from-multiple-domains-from-a-single-mailserver
 authorized_submit_users = static:anyone

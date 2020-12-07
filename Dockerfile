@@ -127,6 +127,15 @@ RUN apt-get update \
             /etc/*/inetutils-syslogd \
             /tmp/*
 
+# DKIM
+RUN apt-get update && \
+    apt -y install opendkim && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /etc/opendkim/keys && \
+    chown opendkim:opendkim /etc/opendkim/keys/ -R && \
+    usermod -a -G opendkim postfix
+
+
 COPY rootfs /
 
 RUN chmod +x /etc/services.d/*/run \
