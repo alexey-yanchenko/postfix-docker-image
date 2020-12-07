@@ -107,9 +107,11 @@ RUN apt-get update && \
     usermod -a -G opendkim postfix
 
 COPY rootfs /
+COPY start.sh /start.sh
 
 RUN chmod +x /etc/services.d/*/run \
-            /etc/cont-init.d/*
+            /etc/cont-init.d/* \
+            /start.sh
 
 #install procps for ps aux command
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
@@ -126,4 +128,4 @@ VOLUME /certs
 #ENTRYPOINT ["/init"]
 
 # start both postfix and opendkim
-CMD ["/usr/lib/postfix/master", "-d"]
+CMD ["/start.sh"]
