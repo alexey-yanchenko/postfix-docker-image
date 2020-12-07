@@ -1,1 +1,1 @@
-mail._domainkey.web-fuse.nl web-fuse.nl:mail:/etc/opendkim/keys/dkim.private.key
+mail._domainkey.web-fuse.nl web-fuse.nl:mail:/etc/ssl/dkim/private.key
