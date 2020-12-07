@@ -88,37 +88,9 @@ RUN apt-get update \
     && install -d /etc/postfix/main.cf.d \
     && install -d /etc/postfix/master.cf.d \
     # Generate default TLS credentials
-    && install -d /etc/ssl/postfix \
-    && openssl req -new -x509 -nodes -days 365 \
-                    -subj "/CN=smtp.example.com" \
-                    -out /etc/ssl/postfix/server.crt \
-                    -keyout /etc/ssl/postfix/server.key \
     && chmod 0600 /etc/ssl/postfix/server.key \
     # Pregenerate Diffie-Hellman parameters (heavy operation)
     && openssl dhparam -out /etc/postfix/dh2048.pem 2048 \
-    # Tweak TLS/SSL settings to achieve A grade
-    && echo "\n\
-            \n# TLS PARAMETERS\
-            \n#\
-            \ntls_ssl_options = NO_COMPRESSION\
-            \ntls_high_cipherlist = ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256\
-            \n\
-            \n# SMTP TLS PARAMETERS (outgoing connections)\
-            \n#\
-            \nsmtp_tls_security_level = may\
-            \nsmtp_tls_CApath = /etc/ssl/certs\
-            \n\
-            \n# SMTPD TLS PARAMETERS (incoming connections)\
-            \n#\
-            \nsmtpd_tls_security_level = may\
-            \nsmtpd_tls_ciphers = high\
-            \nsmtpd_tls_mandatory_ciphers = high\
-            \nsmtpd_tls_exclude_ciphers = aNULL, LOW, EXP, MEDIUM, ADH, AECDH, MD5, DSS, ECDSA, CAMELLIA128, 3DES, CAMELLIA256, RSA+AES, eNULL\
-            \nsmtpd_tls_dh1024_param_file = /etc/postfix/dh2048.pem\
-            \nsmtpd_tls_CApath = /etc/ssl/certs\
-            \nsmtpd_tls_cert_file = /etc/ssl/postfix/server.crt\
-            \nsmtpd_tls_key_file = /etc/ssl/postfix/server.key\
-        " >> /etc/postfix/main.cf \
     # Cleanup unnecessary stuff
     && apt-get purge -y --auto-remove \
                 -o APT::AutoRemove::RecommendsImportant=false \
@@ -136,7 +108,6 @@ RUN apt-get update && \
     chown opendkim:opendkim /etc/opendkim/keys/ -R && \
     usermod -a -G opendkim postfix
 
-
 COPY rootfs /
 
 RUN chmod +x /etc/services.d/*/run \
@@ -148,6 +119,10 @@ WORKDIR /etc/postfix
 
 STOPSIGNAL SIGTERM
 
+# here should the live certificates from certbot be mounted to
+VOLUME /certs
+
 #ENTRYPOINT ["/init"]
 
+# start both postfix and opendkim
 CMD ["/usr/lib/postfix/master", "-d", "&&", "/usr/sbin/opendkim" "-D"]
