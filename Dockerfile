@@ -123,4 +123,4 @@ VOLUME /certs
 #ENTRYPOINT ["/init"]
 
 # start both postfix and opendkim
-CMD ["/usr/lib/postfix/master", "-d", "&&", "/usr/sbin/opendkim" "-D"]
+CMD ["/usr/lib/postfix/master", "-d"]
