@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start the first process
-./usr/lib/postfix/master -D
+/usr/lib/postfix/master -D
 status=$?
 if [ $status -ne 0 ]; then
     echo "Failed to start postfix: $status"
@@ -9,7 +9,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start the second process
-./usr/sbin/opendkim -D
+/usr/sbin/opendkim -D
 status=$?
 if [ $status -ne 0 ]; then
     echo "Failed to start opendkim: $status"
