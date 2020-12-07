@@ -109,7 +109,6 @@ RUN apt-get update \
 RUN apt-get update && \
     apt -y install opendkim && \
     rm -rf /var/lib/apt/lists/* && \
-    chown opendkim:opendkim /etc/opendkim/keys/ -R && \
     usermod -a -G opendkim postfix
 
 #install procps for ps aux command
