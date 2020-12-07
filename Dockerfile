@@ -93,7 +93,7 @@ RUN apt-get update \
                     -subj "/CN=web-fuse.nl" \
                     -out /etc/ssl/postfix/public.key \
                     -keyout /etc/ssl/postfix/private.key \
-    && chmod 0600 /etc/ssl/postfix/server.key \
+    && chmod 0600 /etc/ssl/postfix/private.key \
     # Pregenerate Diffie-Hellman parameters (heavy operation)
     && openssl dhparam -out /etc/postfix/dh2048.pem 2048 \
     # Cleanup unnecessary stuff
