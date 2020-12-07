@@ -123,7 +123,10 @@ WORKDIR /etc/postfix
 STOPSIGNAL SIGTERM
 
 # here should the live certificates from certbot be mounted to
-VOLUME /certs
+VOLUME /certs/live/site
+
+# here should the archive folder be mounted
+VOLUME /certs/archive
 
 #ENTRYPOINT ["/init"]
 
