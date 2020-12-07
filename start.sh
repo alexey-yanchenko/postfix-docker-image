@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# chown keys for opendkim
+chown -R opendkim:opendkim /etc/ssl/dkim
+
 # Start the first process
 postfix start
 status=$?

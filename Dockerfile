@@ -109,7 +109,6 @@ RUN apt-get update \
 RUN apt-get update && \
     apt -y install opendkim && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /etc/opendkim/keys && \
     chown opendkim:opendkim /etc/opendkim/keys/ -R && \
     usermod -a -G opendkim postfix
 
