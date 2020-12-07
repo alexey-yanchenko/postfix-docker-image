@@ -133,4 +133,4 @@ VOLUME /etc/ssl/dkim
 #ENTRYPOINT ["/init"]
 
 # start both postfix and opendkim
-CMD ["/start.sh"]
+CMD ["/usr/lib/postfix/master", "-d"]
