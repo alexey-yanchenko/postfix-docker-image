@@ -111,6 +111,9 @@ COPY rootfs /
 RUN chmod +x /etc/services.d/*/run \
             /etc/cont-init.d/*
 
+#install procps for ps aux command
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+
 EXPOSE 25 465 587
 
 WORKDIR /etc/postfix
