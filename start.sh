@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start the first process
-/usr/lib/postfix/master -D
+/usr/lib/postfix/master -d
 status=$?
 if [ $status -ne 0 ]; then
     echo "Failed to start postfix: $status"
