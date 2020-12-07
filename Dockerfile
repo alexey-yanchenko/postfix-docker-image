@@ -138,6 +138,6 @@ WORKDIR /etc/postfix
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["/init"]
+#ENTRYPOINT ["/init"]
 
 CMD ["/usr/lib/postfix/master", "-d"]
