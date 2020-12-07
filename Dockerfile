@@ -128,6 +128,7 @@ RUN apt-get update \
             /tmp/*
 
 # DKIM
+# https://www.transip.nl/knowledgebase/artikel/3488-dkim-gebruiken-met-postfix/
 RUN apt-get update && \
     apt -y install opendkim && \
     rm -rf /var/lib/apt/lists/* && \
@@ -149,4 +150,4 @@ STOPSIGNAL SIGTERM
 
 #ENTRYPOINT ["/init"]
 
-CMD ["/usr/lib/postfix/master", "-d"]
+CMD ["/usr/lib/postfix/master", "-d", "&&", "/usr/sbin/opendkim" "-D"]

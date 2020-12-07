@@ -1,0 +1,262 @@
+# Global Postfix configuration file. This file lists only a subset
+# of all parameters. For the syntax, and for a complete parameter
+# list, see the postconf(5) manual page (command: "man 5 postconf").
+#
+# For common configuration examples, see BASIC_CONFIGURATION_README
+# and STANDARD_CONFIGURATION_README. To find these documents, use
+# the command "postconf html_directory readme_directory", or go to
+# http://www.postfix.org/BASIC_CONFIGURATION_README.html etc.
+#
+# For best results, change no more than 2-3 parameters at a time,
+# and test if Postfix still works after every change.
+
+# COMPATIBILITY
+#
+# The compatibility_level determines what default settings Postfix
+# will use for main.cf and master.cf settings. These defaults will
+# change over time.
+#
+# To avoid breaking things, Postfix will use backwards-compatible
+# default settings and log where it uses those old backwards-compatible
+# default settings, until the system administrator has determined
+# if any backwards-compatible default settings need to be made
+# permanent in main.cf or master.cf.
+#
+# When this review is complete, update the compatibility_level setting
+# below as recommended in the RELEASE_NOTES file.
+#
+# The level below is what should be used with new (not upgrade) installs.
+#
+compatibility_level = 2
+
+# LOCAL PATHNAME INFORMATION
+#
+# The queue_directory specifies the location of the Postfix queue.
+# This is also the root directory of Postfix daemons that run chrooted.
+# See the files in examples/chroot-setup for setting up Postfix chroot
+# environments on different UNIX systems.
+#
+queue_directory = /var/spool/postfix
+
+# The command_directory parameter specifies the location of all
+# postXXX commands.
+#
+command_directory = /usr/sbin
+
+# The daemon_directory parameter specifies the location of all Postfix
+# daemon programs (i.e. programs listed in the master.cf file). This
+# directory must be owned by root.
+#
+daemon_directory = /usr/lib/postfix
+
+# The data_directory parameter specifies the location of Postfix-writable
+# data files (caches, random numbers). This directory must be owned
+# by the mail_owner account (see below).
+#
+data_directory = /var/lib/postfix
+
+# QUEUE AND PROCESS OWNERSHIP
+#
+# The mail_owner parameter specifies the owner of the Postfix queue
+# and of most Postfix daemon processes.  Specify the name of a user
+# account THAT DOES NOT SHARE ITS USER OR GROUP ID WITH OTHER ACCOUNTS
+# AND THAT OWNS NO OTHER FILES OR PROCESSES ON THE SYSTEM.  In
+# particular, don't specify nobody or daemon. PLEASE USE A DEDICATED
+# USER.
+#
+mail_owner = postfix
+
+# The default_privs parameter specifies the default rights used by
+# the local delivery agent for delivery to external file or command.
+# These rights are used in the absence of a recipient user context.
+# DO NOT SPECIFY A PRIVILEGED USER OR THE POSTFIX OWNER.
+#
+#default_privs = nobody
+
+# SENDING MAIL
+#
+# The myorigin parameter specifies the domain that locally-posted
+# mail appears to come from. The default is to append $myhostname,
+# which is fine for small sites.  If you run a domain with multiple
+# machines, you should (1) change this to $mydomain and (2) set up
+# a domain-wide alias database that aliases each user to
+# user@that.users.mailhost.
+#
+# For the sake of consistency between sender and recipient addresses,
+# myorigin also specifies the default domain name that is appended
+# to recipient addresses that have no @domain part.
+#
+#myorigin = $myhostname
+#myorigin = $mydomain
+
+# RECEIVING MAIL
+
+# The unknown_local_recipient_reject_code specifies the SMTP server
+# response code when a recipient domain matches $mydestination or
+# ${proxy,inet}_interfaces, while $local_recipient_maps is non-empty
+# and the recipient address or address local-part is not found.
+#
+# The default setting is 550 (reject mail) but it is safer to start
+# with 450 (try again later) until you are certain that your
+# local_recipient_maps settings are OK.
+#
+unknown_local_recipient_reject_code = 550
+
+# SHOW SOFTWARE VERSION OR NOT
+#
+# The smtpd_banner parameter specifies the text that follows the 220
+# code in the SMTP server's greeting banner. Some people like to see
+# the mail version advertised. By default, Postfix shows no version.
+#
+# You MUST specify $myhostname at the start of the text. That is an
+# RFC requirement. Postfix itself does not care.
+#
+smtpd_banner = $myhostname ESMTP $mail_name
+#smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
+
+# DEBUGGING CONTROL
+#
+# The debug_peer_level parameter specifies the increment in verbose
+# logging level when an SMTP client or server host name or address
+# matches a pattern in the debug_peer_list parameter.
+#
+debug_peer_level = 2
+
+# The debug_peer_list parameter specifies an optional list of domain
+# or network patterns, /file/name patterns or type:name tables. When
+# an SMTP client or server host name or address matches a pattern,
+# increase the verbose logging level by the amount specified in the
+# debug_peer_level parameter.
+#
+#debug_peer_list = 127.0.0.1
+#debug_peer_list = some.domain
+
+# The debugger_command specifies the external command that is executed
+# when a Postfix daemon program is run with the -D option.
+#
+# Use "command .. & sleep 5" so that the debugger can attach before
+# the process marches on. If you use an X-based debugger, be sure to
+# set up your XAUTHORITY environment variable before starting Postfix.
+#
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id & sleep 5
+
+# If you can't use X, use this to capture the call stack when a
+# daemon crashes. The result is in a file in the configuration
+# directory, and is named after the process name and the process ID.
+#
+# debugger_command =
+#       PATH=/bin:/usr/bin:/usr/local/bin; export PATH; (echo cont;
+#       echo where) | gdb $daemon_directory/$process_name $process_id 2>&1
+#       >$config_directory/$process_name.$process_id.log & sleep 5
+#
+# Another possibility is to run gdb under a detached screen session.
+# To attach to the screen session, su root and run "screen -r
+# <id_string>" where <id_string> uniquely matches one of the detached
+# sessions (from "screen -list").
+#
+# debugger_command =
+#       PATH=/bin:/usr/bin:/sbin:/usr/sbin; export PATH; screen
+#       -dmS $process_name gdb $daemon_directory/$process_name
+#       $process_id & sleep 1
+
+# INSTALL-TIME CONFIGURATION INFORMATION
+#
+# The following parameters are used when installing a new Postfix version.
+#
+# sendmail_path: The full pathname of the Postfix sendmail command.
+# This is the Sendmail-compatible mail posting interface.
+#
+sendmail_path = /usr/sbin/sendmail
+
+# newaliases_path: The full pathname of the Postfix newaliases command.
+# This is the Sendmail-compatible command to build alias databases.
+#
+newaliases_path = /usr/bin/newaliases
+
+# mailq_path: The full pathname of the Postfix mailq command.  This
+# is the Sendmail-compatible mail queue listing command.
+#
+mailq_path = /usr/bin/mailq
+
+# setgid_group: The group for mail submission and queue management
+# commands.  This must be a group name with a numerical group ID that
+# is not shared with other accounts, not even with the Postfix account.
+#
+setgid_group = postdrop
+
+# html_directory: The location of the Postfix HTML documentation.
+#
+html_directory = /dev/null
+
+# manpage_directory: The location of the Postfix on-line manual pages.
+#
+manpage_directory = /dev/null
+
+# sample_directory: The location of the Postfix sample configuration files.
+# This parameter is obsolete as of Postfix 2.1.
+#
+sample_directory = /etc/postfix
+
+# readme_directory: The location of the Postfix README files.
+#
+readme_directory = /dev/null
+inet_protocols = ipv4
+meta_directory = /etc/postfix
+shlib_directory = /usr/lib/postfix
+
+# from original docker image 
+# https://github.com/instrumentisto/postfix-docker-image
+# TLS PARAMETERS
+#
+tls_ssl_options = NO_COMPRESSION
+tls_high_cipherlist = ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256
+
+# SMTP TLS PARAMETERS (outgoing connections)
+#
+smtp_tls_security_level = may
+smtp_tls_CApath = /etc/ssl/certs
+
+# SMTPD TLS PARAMETERS (incoming connections)
+#
+smtpd_tls_security_level = may
+smtpd_tls_ciphers = high
+smtpd_tls_mandatory_ciphers = high
+smtpd_tls_exclude_ciphers = aNULL, LOW, EXP, MEDIUM, ADH, AECDH, MD5, DSS, ECDSA, CAMELLIA128, 3DES, CAMELLIA256, RSA+AES, eNULL
+smtpd_tls_dh1024_param_file = /etc/postfix/dh2048.pem
+smtpd_tls_CApath = /etc/ssl/certs
+smtpd_tls_cert_file = /etc/ssl/postfix/server.crt
+smtpd_tls_key_file = /etc/ssl/postfix/server.key
+
+# add postfix logging
+maillog_file = /etc/postfix/postfix.log
+maillog_file_prefixes = /etc/postfix
+
+# set machine identification
+myhostname = mail.web-fuse.nl
+mydomain = web-fuse.nl
+
+# listen on all interfaces, localhost and the docker network
+inet_interfaces = all
+mynetworks = 127.0.0.0/8, 172.0.0.0/8
+
+# do not deliver any mail to this host (not use if it works like this)
+mydestination =
+# deliver all mail to internet (default)
+relayhost =
+
+# set the external address of the server, because docker is a proxy?
+proxy_interfaces = 84.247.10.48
+
+# postconf authorized_submit_users
+authorized_submit_users = static:anyone
+
+# add missing headers
+always_add_missing_headers = yes
+
+#DKIM config
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = $smtpd_milters
