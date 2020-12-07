@@ -24,7 +24,8 @@ RUN apt-get update \
             libpcre3-dev libicu-dev \
             libdb-dev libpq-dev libmariadbclient-dev libmariadb-dev-compat libsqlite3-dev libmariadb-dev-compat \
             libsasl2-dev \
-            libldap2-dev " \
+            libldap2-dev \
+            m4" \
     && apt-get install -y --no-install-recommends --no-install-suggests $buildDeps \
     # Download and prepare Postfix sources
     && curl -fL -o /tmp/postfix.tar.gz http://cdn.postfix.johnriley.me/mirrors/postfix-release/official/postfix-3.5.8.tar.gz \
