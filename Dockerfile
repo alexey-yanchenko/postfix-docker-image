@@ -91,7 +91,7 @@ RUN apt-get update \
     # Generate default TLS credentials
     && install -d /etc/ssl/postfix \
     && openssl req -new -x509 -nodes -days 365 \
-                    -subj "/CN=web-fuse.nl" \
+                    -subj "/CN=mail.web-fuse.nl" \
                     -out /etc/ssl/postfix/public.key \
                     -keyout /etc/ssl/postfix/private.key \
     && chmod 0600 /etc/ssl/postfix/private.key \
