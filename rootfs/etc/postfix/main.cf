@@ -241,7 +241,7 @@ mydomain = web-fuse.nl
 inet_interfaces = all
 mynetworks = 127.0.0.0/8, 172.0.0.0/8
 
-# do not deliver any mail to this host (not use if it works like this)
+# do not deliver any mail to this host (not sure if it works like this)
 mydestination =
 # deliver all mail to internet (default)
 relayhost =

@@ -29,7 +29,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests $buildDeps \
     # Download and prepare Postfix sources
     && curl -fL -o /tmp/postfix.tar.gz http://cdn.postfix.johnriley.me/mirrors/postfix-release/official/postfix-3.5.8.tar.gz \
-    #&& (echo "00e2b0974e59420cabfddc92597a99b42c8a8c9cd9a0c279c63ba6be9f40b15400f37dc16d0b1312130e72b5ba82b56fc7d579ee9ef975a957c0931b0401213c  /tmp/postfix.tar.gz" | sha512sum -c -) \
+    && (echo "00e2b0974e59420cabfddc92597a99b42c8a8c9cd9a0c279c63ba6be9f40b15400f37dc16d0b1312130e72b5ba82b56fc7d579ee9ef975a957c0931b0401213c  /tmp/postfix.tar.gz" | sha512sum -c -) \
     && tar -xzf /tmp/postfix.tar.gz -C /tmp/ \
     && cd /tmp/postfix-* \
     && sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf \
@@ -104,22 +104,25 @@ RUN apt-get update \
             /etc/*/inetutils-syslogd \
             /tmp/*
 
-# DKIM
-# https://www.transip.nl/knowledgebase/artikel/3488-dkim-gebruiken-met-postfix/
-RUN apt-get update && \
-    apt -y install opendkim && \
-    rm -rf /var/lib/apt/lists/* && \
-    usermod -a -G opendkim postfix
+# Install s6-overlay
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --no-install-suggests curl \
+    && curl -fL -o /tmp/s6-overlay.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v2.0.0.1/s6-overlay-amd64.tar.gz \
+    && tar -xzf /tmp/s6-overlay.tar.gz -C / \
+    # Cleanup unnecessary stuff
+    && apt-get purge -y --auto-remove \
+                -o APT::AutoRemove::RecommendsImportant=false \
+                curl \
+    && rm -rf /var/lib/apt/lists/* \
+            /tmp/*
 
-#install procps for ps aux command
-RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_CMD_WAIT_FOR_SERVICES=1
 
 COPY rootfs /
-COPY start.sh /start.sh
 
 RUN chmod +x /etc/services.d/*/run \
-            /etc/cont-init.d/* \
-            /start.sh
+            /etc/cont-init.d/*
 
 EXPOSE 25 465 587
 
@@ -127,10 +130,6 @@ WORKDIR /etc/postfix
 
 STOPSIGNAL SIGTERM
 
-# should contain private.key and public.key RSA keys in PEM format
-VOLUME /etc/ssl/dkim
+ENTRYPOINT ["/init"]
 
-#ENTRYPOINT ["/init"]
-
-# start both postfix and opendkim
-CMD ["/start.sh"]
+CMD ["/usr/lib/postfix/master", "-d"]
