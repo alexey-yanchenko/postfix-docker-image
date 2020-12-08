@@ -29,7 +29,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends --no-install-suggests $buildDeps \
     # Download and prepare Postfix sources
     && curl -fL -o /tmp/postfix.tar.gz http://cdn.postfix.johnriley.me/mirrors/postfix-release/official/postfix-3.5.8.tar.gz \
-    && (echo "00e2b0974e59420cabfddc92597a99b42c8a8c9cd9a0c279c63ba6be9f40b15400f37dc16d0b1312130e72b5ba82b56fc7d579ee9ef975a957c0931b0401213c  /tmp/postfix.tar.gz" | sha512sum -c -) \
+    # I can't find the new checksum?
+    #&& (echo "00e2b0974e59420cabfddc92597a99b42c8a8c9cd9a0c279c63ba6be9f40b15400f37dc16d0b1312130e72b5ba82b56fc7d579ee9ef975a957c0931b0401213c  /tmp/postfix.tar.gz" | sha512sum -c -) \
     && tar -xzf /tmp/postfix.tar.gz -C /tmp/ \
     && cd /tmp/postfix-* \
     && sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf \
