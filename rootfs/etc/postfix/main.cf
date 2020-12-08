@@ -230,8 +230,8 @@ smtpd_tls_cert_file = /etc/ssl/postfix/public.key
 smtpd_tls_key_file = /etc/ssl/postfix/private.key
 
 # add postfix logging
-maillog_file = /etc/postfix/postfix.log
-maillog_file_prefixes = /etc/postfix
+#maillog_file = /etc/postfix/postfix.log
+#maillog_file_prefixes = /etc/postfix
 
 # set machine identification
 myhostname = mail.web-fuse.nl
