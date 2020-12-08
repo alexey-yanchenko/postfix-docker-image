@@ -1,5 +1,5 @@
 FROM debian:buster-slim
-MAINTAINER Luc Appelman "lucapppelman@gmail.com"
+LABEL Luc Appelman "lucapppelman@gmail.com"
 
 # Build and install Postfix
 # https://git.launchpad.net/postfix/tree/debian/rules?id=94dfb9850484db5f47958eaa86f958857ab9834c
