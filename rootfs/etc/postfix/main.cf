@@ -234,8 +234,9 @@ smtpd_tls_key_file = /etc/ssl/postfix/private.key
 #maillog_file_prefixes = /etc/postfix
 
 # set machine identification
-myhostname = mail.web-fuse.nl
+myhostname = web-fuse.nl
 mydomain = web-fuse.nl
+myorigin = $mydomain
 
 # listen on all interfaces, localhost and the docker network
 inet_interfaces = all
@@ -251,6 +252,8 @@ proxy_interfaces = 84.247.10.48
 
 # postconf authorized_submit_users
 authorized_submit_users = static:anyone
+
+recipient_delimiter = +
 
 # add missing headers
 always_add_missing_headers = yes
