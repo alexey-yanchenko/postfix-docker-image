@@ -265,4 +265,4 @@ smtpd_milters = inet:opendkim:8891
 non_smtpd_milters = $smtpd_milters
 
 # fix CRLF lines from php to LF
-sendmail_fix_line_endings always
+sendmail_fix_line_endings = always
