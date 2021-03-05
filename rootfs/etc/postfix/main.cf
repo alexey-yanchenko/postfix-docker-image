@@ -111,8 +111,9 @@ unknown_local_recipient_reject_code = 550
 # You MUST specify $myhostname at the start of the text. That is an
 # RFC requirement. Postfix itself does not care.
 #
-smtpd_banner = $myhostname ESMTP $mail_name
+#smtpd_banner = $myhostname ESMTP $mail_name
 #smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
+# SMTPD_BANNER is set later in the config
 
 # DEBUGGING CONTROL
 #
@@ -237,6 +238,7 @@ smtpd_tls_key_file = /etc/ssl/postfix/private.key
 myhostname = web-fuse.nl
 mydomain = web-fuse.nl
 myorigin = $mydomain
+smtpd_banner = $myhostname ESMTP $mail_name
 
 # listen on all interfaces, localhost and the docker network
 inet_interfaces = all
@@ -256,7 +258,7 @@ authorized_submit_users = static:anyone
 recipient_delimiter = +
 
 # add missing headers
-always_add_missing_headers = yes
+#always_add_missing_headers = yes
 
 #DKIM config
 milter_default_action = accept
@@ -265,4 +267,4 @@ smtpd_milters = inet:opendkim:8891
 non_smtpd_milters = $smtpd_milters
 
 # fix CRLF lines from php to LF
-sendmail_fix_line_endings = always
+#sendmail_fix_line_endings = always
