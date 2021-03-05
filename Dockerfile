@@ -119,6 +119,9 @@ RUN apt-get update \
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICES=1
+    
+# create aliases file
+RUN touch /etc/aliases && newaliases
 
 COPY rootfs /
 
