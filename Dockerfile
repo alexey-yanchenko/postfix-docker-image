@@ -1,6 +1,8 @@
 FROM debian:buster-slim
 LABEL Luc Appelman "lucapppelman@gmail.com"
 
+RUN mkdir /tmp/postfix
+COPY ./postfix /tmp/postfix
 # Build and install Postfix
 # https://git.launchpad.net/postfix/tree/debian/rules?id=94dfb9850484db5f47958eaa86f958857ab9834c
 RUN apt-get update \
@@ -28,11 +30,7 @@ RUN apt-get update \
             m4" \
     && apt-get install -y --no-install-recommends --no-install-suggests $buildDeps \
     # Download and prepare Postfix sources
-    && curl -fL -o /tmp/postfix.tar.gz http://cdn.postfix.johnriley.me/mirrors/postfix-release/official/postfix-3.5.8.tar.gz \
-    # I can't find the new checksum?
-    #&& (echo "00e2b0974e59420cabfddc92597a99b42c8a8c9cd9a0c279c63ba6be9f40b15400f37dc16d0b1312130e72b5ba82b56fc7d579ee9ef975a957c0931b0401213c  /tmp/postfix.tar.gz" | sha512sum -c -) \
-    && tar -xzf /tmp/postfix.tar.gz -C /tmp/ \
-    && cd /tmp/postfix-* \
+    && cd /tmp/postfix \
     && sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf \
     # Build Postfix from sources
     && make makefiles \
@@ -119,7 +117,7 @@ RUN apt-get update \
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICES=1
-    
+
 # create aliases file
 RUN touch /etc/aliases && newaliases
 

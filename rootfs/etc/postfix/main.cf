@@ -207,7 +207,7 @@ inet_protocols = ipv4
 meta_directory = /etc/postfix
 shlib_directory = /usr/lib/postfix
 
-# from original docker image 
+# from original docker image
 # https://github.com/instrumentisto/postfix-docker-image
 # TLS PARAMETERS
 #
